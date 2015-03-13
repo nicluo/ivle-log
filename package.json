@@ -1,0 +1,19 @@
+{
+  "name": "ivle-log",
+  "version": "1.0.0",
+  "description": "API Querying and Logging Utility to create Time-based tests",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://nicluo@bitbucket.org/nicluo/ivle-log.git"
+  },
+  "author": "Nicholas Luo",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^3.5.0",
+    "request": "^2.53.0"
+  }
+}
