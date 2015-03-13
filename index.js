@@ -7,8 +7,13 @@ function startLogging(token){
 }
 
 if(!module.parent){
-  var token = config.token;
+  var apikey = config.apikey;
+  if(apikey == '21characterlongapikey'){
+    console.log('Visit https://ivle.nus.edu.sg/LAPI/default.aspx to get your IVLE Api Key, then modify config.json, then run this again.');
+    process.exit(1);
+  }
 
+  var token = config.token;
   if(token){
     startLogging(token);
   } else {
