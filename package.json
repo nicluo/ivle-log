@@ -13,6 +13,7 @@
   "author": "Nicholas Luo",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^2.9.14",
     "lodash": "^3.5.0",
     "request": "^2.53.0"
   }

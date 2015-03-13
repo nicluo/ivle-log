@@ -1,9 +1,19 @@
-var request = require('request');
 var _ = require('lodash');
+var Promise = require('bluebird');
+
 var config = require('./config');
 
-var login_url = 'https://ivle.nus.edu.sg/api/login/?apikey=' + config.apikey  + '&url=http://localhost/';
+function startLogging(token){
+}
 
 if(!module.parent){
-  console.log('Go to \n%s\nto obtain your Auth Token', login_url);
+  var token = config.token;
+
+  if(token){
+    startLogging(token);
+  } else {
+    console.log('No Valid Token Detected');
+    var server = require('./server');
+    server.singleLoginServer().then(startLogging);
+  }
 }

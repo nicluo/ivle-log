@@ -1,4 +1,5 @@
 {
   "_comment": "To get your API Key, visit: https://ivle.nus.edu.sg/LAPI/default.aspx",
+  "_token": "To avoid logging in repeatedly, rename this key to token, and put the 480 character long token as this value",
   "apikey": "21characterlongapikey"
 }
