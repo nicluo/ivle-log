@@ -6,7 +6,9 @@ var config = require('./config');
 var ivle = require('./ivle');
 
 var _request = function _request(url, callback){
-  request(url, function(error, response, body) {
+  request({ url: url, time: true }, function(error, response, body) {
+    console.log(response.statusCode);
+    console.log(response.elapsedTime);
     var results = body;
     callback(error, results);
   });
@@ -14,6 +16,7 @@ var _request = function _request(url, callback){
 
 var _logProfile = function(token){
   _request(ivle.profileUrl(token), function(err, body) {
+    console.log("Profile Logging...");
     console.log(err);
     console.log(body);
   });
@@ -21,26 +24,35 @@ var _logProfile = function(token){
 
 var _logModules = function(token){
   _request(ivle.modulesUrl(token), function(err, body) {
+    console.log("Modules Logging...");
     console.log(err);
     console.log(body);
   });
 };
 
 var _logWorkbin = function(token){
-    _request(ivle.modulesUrl(token), function(err, body) {
-      var modules = body.match(/"ID":"[^"]*"/gi);
-      modules = _.map(modules, function(moduleString) {
-        var modStringMatch = moduleString.match(/"ID":"([^"]*)"/i);
-        return modStringMatch[1];
-      });
-      console.log(modules);
+  var ids = _request(ivle.modulesUrl(token), function(err, body) {
+    var modules = body.match(/"ID":"[^"]*"/gi);
+    modules = _.map(modules, function(moduleString) {
+      var modStringMatch = moduleString.match(/"ID":"([^"]*)"/i);
+      return modStringMatch[1];
+    });
+    // Print workbin logs for each course
+    _.each(modules, function(courseId) {
+      console.log(ivle.workbinsUrl(token, courseId));
+      //_request(ivle.workbinsUrl(token, courseId), function(err, body) {
+        //console.log("Profile Logging...");
+        //console.log(err);
+        //console.log(body);
+      //});
+  });
   });
 };
 
 
 function startLogging(token){
-//  _logProfile(token);
-//  _logModules(token);
+  _logProfile(token);
+  _logModules(token);
   _logWorkbin(token);
   // console.log(ivle.modulesUrl(token));
 }
