@@ -12,21 +12,27 @@ var _request = function(url, callback){
   var startTime = new Date().getTime();
 
   request(url, {time: true}, function(error, response, body) {
-    response.elapsedTime = (new Date().getTime() - startTime) || 0;
+    if(response)
+      response.elapsedTime = (new Date().getTime() - startTime) || 0;
 
     callback(error, response, body);
   });
 };
 
 var _createLog = function(url, err, response, body) {
+  console.log(err);
   var logObj = {
-    statusCode: response.statusCode,
-    requestTime: response.elapsedTime,
     body: body,
     date: new Date(),
     url: url,
     error: err
   };
+
+  if(response)
+    _.extend(logObj, {
+      statusCode: response.statusCode,
+      requestTime: response.elapsedTime
+    });
 
   logger.info(JSON.stringify(logObj));
 };
