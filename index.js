@@ -75,7 +75,8 @@ var _logAll = function(token){
 var startLogging = function(token){
   _logAll(token);
 
-  var rule = new schedule.RecurrenceRule();
+  // Run job every 10 minutes
+  var rule = '*/10 * * * *';
 
   var j = schedule.scheduleJob(rule, function(){
     _logAll(token);
