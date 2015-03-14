@@ -18,7 +18,7 @@ var _request = function(url, callback){
   });
 };
 
-var __createLog = function(url, err, response, body) {
+var _createLog = function(url, err, response, body) {
   var logObj = {
     statusCode: response.statusCode,
     requestTime: response.elapsedTime,
@@ -27,6 +27,7 @@ var __createLog = function(url, err, response, body) {
     url: url,
     error: err
   };
+
   console.log(JSON.stringify(logObj));
 };
 
@@ -65,19 +66,19 @@ var _logWorkbins = function(token){
   });
 };
 
+var _logAll = function(token){
+    _logProfile(token);
+    _logModules(token);
+    _logWorkbins(token);
+};
 
 var startLogging = function(token){
-  _logProfile(token);
-  _logModules(token);
-  _logWorkbins(token);
-  // console.log(ivle.modulesUrl(token));
+  // _logAll(token);
 
   var rule = new schedule.RecurrenceRule();
 
   var j = schedule.scheduleJob(rule, function(){
-    // _logProfile(token);
-   // _logModules(token);
-    // _logWorkbins(token);
+    _logAll(token);
   });
 };
 
