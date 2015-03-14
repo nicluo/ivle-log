@@ -18,30 +18,35 @@ var _request = function(url, callback){
   });
 };
 
+var __createLog = function(url, err, response, body) {
+  var logObj = {
+    statusCode: response.statusCode,
+    requestTime: response.elapsedTime,
+    body: body,
+    date: new Date(),
+    url: url,
+    error: err
+  };
+  console.log(JSON.stringify(logObj));
+};
+
+
 var _logProfile = function(token){
   var url = ivle.profileUrl(token);
   _request(url, function(err, response, body) {
-    var profileObj = {
-      statusCode: response.statusCode,
-      requestTime: response.elapsedTime,
-      body: body,
-      date: new Date(),
-      url: url,
-      error: err
-    };
-    console.log(JSON.stringify(profileObj));
+    _createLog(url, err, response, body);
   });
 };
 
 var _logModules = function(token){
-  _request(ivle.modulesUrl(token), function(err, response, body) {
-    console.log("Modules Logging...");
-    console.log(err);
-    console.log(body);
+    var url = ivle.modulesUrl(token);
+  _request(url, function(err, response, body) {
+    _createLog(url, err, response, body);
   });
 };
 
 var _logWorkbins = function(token){
+
   _request(ivle.modulesUrl(token), function(err, response, body) {
     var courseIdStrings = body.match(/"ID":"[^"]*"/gi);
     courseIds = _.map(courseIdStrings, function(courseIdString) {
@@ -51,10 +56,10 @@ var _logWorkbins = function(token){
 
     // Print workbin logs for each course
     _.each(courseIds, function(courseId) {
-      _request(ivle.workbinsUrl(token, courseId), function(err, response, body) {
-        console.log("Workbin Logging...");
-        console.log(err);
-        console.log(body);
+      var url = ivle.workbinsUrl(token, courseId);
+
+      _request(url, function(err, response, body) {
+        _createLog(url, err, response, body);
       });
     });
   });
@@ -63,14 +68,14 @@ var _logWorkbins = function(token){
 
 var startLogging = function(token){
   _logProfile(token);
-  // _logModules(token);
-  // _logWorkbin(token);
+  _logModules(token);
+  _logWorkbins(token);
   // console.log(ivle.modulesUrl(token));
 
   var rule = new schedule.RecurrenceRule();
 
   var j = schedule.scheduleJob(rule, function(){
-    _logProfile(token);
+    // _logProfile(token);
    // _logModules(token);
     // _logWorkbins(token);
   });
