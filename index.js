@@ -1,21 +1,25 @@
 var _ = require('lodash');
 var request = require('request');
 var Promise = require('bluebird');
+var schedule = require('node-schedule');
+
 
 var config = require('./config');
 var ivle = require('./ivle');
 
-var _request = function _request(url, callback){
-  request({ url: url, time: true }, function(error, response, body) {
-    console.log(response.statusCode);
-    console.log(response.elapsedTime);
-    var results = body;
-    callback(error, results);
+var _request = function(url, callback){
+  // Request time apparently does not work
+  var startTime = new Date().getTime();
+
+  request(url, {time: true}, function(error, response, body) {
+    response.elapsedTime = (new Date().getTime() - startTime) || 0;
+
+    callback(error, response, body);
   });
 };
 
 var _logProfile = function(token){
-  _request(ivle.profileUrl(token), function(err, body) {
+  _request(ivle.profileUrl(token), function(err, response, body) {
     console.log("Profile Logging...");
     console.log(err);
     console.log(body);
@@ -23,39 +27,47 @@ var _logProfile = function(token){
 };
 
 var _logModules = function(token){
-  _request(ivle.modulesUrl(token), function(err, body) {
+  _request(ivle.modulesUrl(token), function(err, response, body) {
     console.log("Modules Logging...");
     console.log(err);
     console.log(body);
   });
 };
 
-var _logWorkbin = function(token){
-  var ids = _request(ivle.modulesUrl(token), function(err, body) {
-    var modules = body.match(/"ID":"[^"]*"/gi);
-    modules = _.map(modules, function(moduleString) {
-      var modStringMatch = moduleString.match(/"ID":"([^"]*)"/i);
-      return modStringMatch[1];
+var _logWorkbins = function(token){
+  _request(ivle.modulesUrl(token), function(err, response, body) {
+    var courseIdStrings = body.match(/"ID":"[^"]*"/gi);
+    courseIds = _.map(courseIdStrings, function(courseIdString) {
+      var courseIdStringMatch = courseIdString.match(/"ID":"([^"]*)"/i);
+      return courseIdStringMatch[1];
     });
+
     // Print workbin logs for each course
-    _.each(modules, function(courseId) {
-      console.log(ivle.workbinsUrl(token, courseId));
-      //_request(ivle.workbinsUrl(token, courseId), function(err, body) {
-        //console.log("Profile Logging...");
-        //console.log(err);
-        //console.log(body);
-      //});
-  });
+    _.each(courseIds, function(courseId) {
+      _request(ivle.workbinsUrl(token, courseId), function(err, response, body) {
+        console.log("Workbin Logging...");
+        console.log(err);
+        console.log(body);
+      });
+    });
   });
 };
 
 
-function startLogging(token){
-  _logProfile(token);
-  _logModules(token);
-  _logWorkbin(token);
+var startLogging = function(token){
+  // _logProfile(token);
+  // _logModules(token);
+  // _logWorkbin(token);
   // console.log(ivle.modulesUrl(token));
-}
+
+  var rule = new schedule.RecurrenceRule();
+
+  var j = schedule.scheduleJob(rule, function(){
+    _logProfile(token);
+    _logModules(token);
+    _logWorkbins(token);
+  });
+};
 
 if(!module.parent){
   var apikey = config.apikey;
