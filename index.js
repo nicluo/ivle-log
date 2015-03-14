@@ -3,9 +3,9 @@ var request = require('request');
 var Promise = require('bluebird');
 var schedule = require('node-schedule');
 
-
 var config = require('./config');
 var ivle = require('./ivle');
+var logger = require('./logger');
 
 var _request = function(url, callback){
   // Request time apparently does not work
@@ -28,7 +28,7 @@ var _createLog = function(url, err, response, body) {
     error: err
   };
 
-  console.log(JSON.stringify(logObj));
+  logger.info(JSON.stringify(logObj));
 };
 
 
@@ -73,7 +73,7 @@ var _logAll = function(token){
 };
 
 var startLogging = function(token){
-  // _logAll(token);
+  _logAll(token);
 
   var rule = new schedule.RecurrenceRule();
 
