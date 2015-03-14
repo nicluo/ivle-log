@@ -19,10 +19,17 @@ var _request = function(url, callback){
 };
 
 var _logProfile = function(token){
-  _request(ivle.profileUrl(token), function(err, response, body) {
-    console.log("Profile Logging...");
-    console.log(err);
-    console.log(body);
+  var url = ivle.profileUrl(token);
+  _request(url, function(err, response, body) {
+    var profileObj = {
+      statusCode: response.statusCode,
+      requestTime: response.elapsedTime,
+      body: body,
+      date: new Date(),
+      url: url,
+      error: err
+    };
+    console.log(JSON.stringify(profileObj));
   });
 };
 
@@ -55,7 +62,7 @@ var _logWorkbins = function(token){
 
 
 var startLogging = function(token){
-  // _logProfile(token);
+  _logProfile(token);
   // _logModules(token);
   // _logWorkbin(token);
   // console.log(ivle.modulesUrl(token));
@@ -64,8 +71,8 @@ var startLogging = function(token){
 
   var j = schedule.scheduleJob(rule, function(){
     _logProfile(token);
-    _logModules(token);
-    _logWorkbins(token);
+   // _logModules(token);
+    // _logWorkbins(token);
   });
 };
 
