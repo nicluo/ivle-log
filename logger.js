@@ -9,6 +9,7 @@ var logger = new (winston.Logger)({
     }),
   new (winston.transports.File)({
     filename: 'ivle_requests.log',
+    json: false,
     formatter: function(options) {
         return options.message;
       }
