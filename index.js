@@ -46,15 +46,16 @@ var _logProfile = function(token){
 };
 
 var _logModules = function(token){
-    var url = ivle.modulesUrl(token);
+  var url = ivle.modulesUrl(token);
   _request(url, function(err, response, body) {
     _createLog(url, err, response, body);
   });
 };
 
 var _logWorkbins = function(token){
-
   _request(ivle.modulesUrl(token), function(err, response, body) {
+    if(err) return _createLog(ivle.modulesUrl(token), err);
+
     var courseIdStrings = body.match(/"ID":"[^"]*"/gi);
     courseIds = _.map(courseIdStrings, function(courseIdString) {
       var courseIdStringMatch = courseIdString.match(/"ID":"([^"]*)"/i);
