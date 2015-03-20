@@ -76,7 +76,30 @@ function workbinsUrl(token, courseId){
     }
   }, options);
 
+function downloadUrl(token, fileId){
+  var urlOptions = _.extend({
+    pathname: '/api/downloadfile.ashx',
+    query: {
+      APIKey: config.apikey,
+      AuthToken: token,
+      ID: fileId,
+      target: 'workbin'
+    }
+  }, options);
+
   return url.format(urlOptions);
+}
+
+function downloadFile(token, fileId, path){
+  var request = require('request');
+  var fs = require('fs');
+
+  request
+    .get(downloadUrl(token, fileId))
+    .on('error', function(err) {
+      console.log(err);
+    })
+    .pipe(fs.createWriteStream(path));
 }
 
 module.exports = {
@@ -84,5 +107,7 @@ module.exports = {
   loginUrl: loginUrl,
   profileUrl: profileUrl,
   modulesUrl: modulesUrl,
-  workbinsUrl: workbinsUrl
+  workbinsUrl: workbinsUrl,
+  downloadUrl: downloadUrl,
+  downloadFile: downloadFile
 };
