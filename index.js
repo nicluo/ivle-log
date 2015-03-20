@@ -11,7 +11,7 @@ var _request = function(url, callback){
   // Request time apparently does not work
   var startTime = new Date().getTime();
 
-  request(url, {time: true}, function(error, response, body) {
+  request(url, {time: true, timeout: 600000}, function(error, response, body) {
     if(response)
       response.elapsedTime = (new Date().getTime() - startTime) || 0;
 
