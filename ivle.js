@@ -1,8 +1,15 @@
 var util = require('util');
 var Promise = require('bluebird');
 var request = require('request');
+var url = require('url');
+var _ = require('lodash');
 
 var config = require('./config');
+
+var options = {
+  protocol: 'https',
+  hostname: 'ivle.nus.edu.sg'
+};
 
 var validLogin = function(token){
   return new Promise(function(resolve, reject) {
@@ -21,7 +28,15 @@ var validLogin = function(token){
 };
 
 var loginUrl = function(){
-  return util.format('https://ivle.nus.edu.sg/api/login/?apikey=%s&url=http://127.0.0.1:1337/callback', config.apikey);
+  var urlOptions = _.extend({
+    pathname: '/api/login',
+    query: {
+      apikey: config.apikey,
+      url: 'http://127.0.0.1:1337/callback'
+    }
+  }, options);
+
+  return url.format(urlOptions);
 };
 
 function profileUrl(token){
