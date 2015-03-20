@@ -40,15 +40,43 @@ var loginUrl = function(){
 };
 
 function profileUrl(token){
-  return util.format('https://ivle.nus.edu.sg/api/Lapi.svc/Profile_View?APIKey=%s&AuthToken=%s', config.apikey, token);
+  var urlOptions = _.extend({
+    pathname: '/api/Lapi.svc/Profile_View',
+    query: {
+      APIKey: config.apikey,
+      AuthToken: token
+    }
+  }, options);
+
+  return url.format(urlOptions);
 }
 
 function modulesUrl(token){
-  return util.format('https://ivle.nus.edu.sg/api/Lapi.svc/Modules_Student?APIKey=%s&AuthToken=%s&Duration=0&IncludeAllInfo=false', config.apikey, token);
+  var urlOptions = _.extend({
+    pathname: '/api/Lapi.svc/Modules_Student',
+    query: {
+      APIKey: config.apikey,
+      AuthToken: token,
+      Duration: 0,
+      IncludeAllInfo: false
+    }
+  }, options);
+
+  return url.format(urlOptions);
 }
 
 function workbinsUrl(token, courseId){
-  return util.format('https://ivle.nus.edu.sg/api/Lapi.svc/Workbins?APIKey=%s&AuthToken=%s&CourseID=%s&Duration=0', config.apikey, token, courseId);
+  var urlOptions = _.extend({
+    pathname: '/api/Lapi.svc/Workbins',
+    query: {
+      APIKey: config.apikey,
+      AuthToken: token,
+      CourseID: courseId,
+      Duration: 0
+    }
+  }, options);
+
+  return url.format(urlOptions);
 }
 
 module.exports = {
