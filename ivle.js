@@ -65,7 +65,7 @@ function modulesUrl(token){
   return url.format(urlOptions);
 }
 
-function workbinsUrl(token, courseId){
+function workbinsUrl(token, courseId, queryOverrides){
   var urlOptions = _.extend({
     pathname: '/api/Lapi.svc/Workbins',
     query: {
@@ -75,6 +75,11 @@ function workbinsUrl(token, courseId){
       Duration: 0
     }
   }, options);
+
+  _.assign(urlOptions.query, queryOverrides || {});
+
+  return url.format(urlOptions);
+}
 
 function downloadUrl(token, fileId){
   var urlOptions = _.extend({

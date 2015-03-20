@@ -52,7 +52,7 @@ var _logModules = function(token){
   });
 };
 
-var _logWorkbins = function(token){
+var _logWorkbins = function(token, duration){
   _request(ivle.modulesUrl(token), function(err, response, body) {
     if(err) return _createLog(ivle.modulesUrl(token), err);
 
@@ -64,7 +64,11 @@ var _logWorkbins = function(token){
 
     // Print workbin logs for each course
     _.each(courseIds, function(courseId) {
-      var url = ivle.workbinsUrl(token, courseId);
+      var queryOverrides = {};
+
+      if(duration) queryOverrides.Duration = duration;
+
+      var url = ivle.workbinsUrl(token, courseId, queryOverrides);
 
       _request(url, function(err, response, body) {
         _createLog(url, err, response, body);
@@ -77,6 +81,7 @@ var _logAll = function(token){
     _logProfile(token);
     _logModules(token);
     _logWorkbins(token);
+    _logWorkbins(token, 10);
 };
 
 var startLogging = function(token){
