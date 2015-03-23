@@ -1,8 +1,8 @@
 var util = require('util');
 var Promise = require('bluebird');
-var request = require('request');
 var url = require('url');
 var _ = require('lodash');
+var request = Promise.promisify(require('request'));
 
 var config = require('./config');
 
@@ -13,17 +13,22 @@ var options = {
 
 var validLogin = function(token){
   return new Promise(function(resolve, reject) {
-    request(profileUrl(token), function(error, response, body){
-      if(error) return reject(error);
 
-      // Check API Response for {Comments: Valid login!}
+    request(profileUrl(token)).then(function(result){
+      var response = result[0];
+      var body = result[1];
+
       var jsonBody = JSON.parse(body);
+
       if(jsonBody.Comments == 'Valid login!'){
         resolve(true);
       } else {
         resolve(false);
       }
+    }).catch(function(e){
+      resolve(false);
     });
+
   });
 };
 
