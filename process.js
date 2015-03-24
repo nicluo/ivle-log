@@ -55,10 +55,10 @@ new lazy(fs.createReadStream('./ivle_requests.log'))
 
       var requestTimes = _.pluck(value, 'requestTime');
 
-
-      _.each(value, function(val){
-        // console.log(val.body)
-      });
+      // Output each unique response
+      // _.each(bodies, function(val){
+      //   console.dir(val, {depth: null, colors:true});
+      // });
 
 
       console.log('Uniques:', bodies.length);
