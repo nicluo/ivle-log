@@ -104,7 +104,8 @@ if(!module.parent){
 
   var token = config.token;
   if(token){
-    startLogging(token);
+  ivle.downloadFile(token, '7f241cb5-3549-4c46-b1d9-18fc8cfe849b', 'test.pdf')
+    // startLogging(token);
   } else {
     console.log('No Valid Token Detected');
     var server = require('./server');
