@@ -13,7 +13,7 @@
   "author": "Nicholas Luo",
   "license": "ISC",
   "dependencies": {
-    "bluebird": "^2.9.14",
+    "bluebird": "^2.10.2",
     "lazy": "^1.0.11",
     "lodash": "^3.5.0",
     "node-schedule": "^0.2.3",
